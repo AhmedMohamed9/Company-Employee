@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="companyDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="birth_date" Type="DateTime" Precision="0" />
+    <Property Name="num_of_child" Type="Int16" />
+    <Property Name="manger_id" Type="Int32" />
+    <NavigationProperty Name="Employee1" Relationship="Self.FK_Employee_Employee" FromRole="Employee" ToRole="Employee1" />
+    <NavigationProperty Name="Employee2" Relationship="Self.FK_Employee_Employee" FromRole="Employee1" ToRole="Employee" />
+    <NavigationProperty Name="tasks" Relationship="Self.employee_tasks" FromRole="Employee" ToRole="tasks" />
+  </EntityType>
+  <EntityType Name="tasks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="start" Type="DateTime" Precision="0" />
+    <Property Name="end" Type="DateTime" Precision="0" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="progress" Type="Int16" />
+    <Property Name="proj_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Employee" Relationship="Self.employee_tasks" FromRole="tasks" ToRole="Employee" />
+    <NavigationProperty Name="projects" Relationship="companyDBModel.FK_tasks_projects" FromRole="tasks" ToRole="projects" />
+  </EntityType>
+  <Association Name="FK_Employee_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="Employee1" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Employee1">
+        <PropertyRef Name="manger_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="employee_tasks">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <End Role="tasks" Type="Self.tasks" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="companyDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Employee" EntityType="Self.Employee" />
+    <EntitySet Name="tasks" EntityType="Self.tasks" />
+    <AssociationSet Name="FK_Employee_Employee" Association="Self.FK_Employee_Employee">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="Employee1" EntitySet="Employee" />
+    </AssociationSet>
+    <AssociationSet Name="employee_tasks" Association="Self.employee_tasks">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="tasks" EntitySet="tasks" />
+    </AssociationSet>
+    <FunctionImport Name="getemployee" ReturnType="Collection(companyDBModel.getemployee_Result)" />
+    <EntitySet Name="projects" EntityType="companyDBModel.projects" />
+    <AssociationSet Name="FK_tasks_projects" Association="companyDBModel.FK_tasks_projects">
+      <End Role="projects" EntitySet="projects" />
+      <End Role="tasks" EntitySet="tasks" />
+    </AssociationSet>
+    <FunctionImport Name="get_projects" ReturnType="Collection(companyDBModel.get_projects_Result)" />
+    <FunctionImport Name="proc_proj" ReturnType="Collection(companyDBModel.proc_proj_Result)" />
+    <FunctionImport Name="proc_delete_proj">
+      <Parameter Name="name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="proc_get_employee_for_data_grid" ReturnType="Collection(companyDBModel.proc_get_employee_for_data_grid_Result)" />
+    <FunctionImport Name="proc_delete_employee">
+      <Parameter Name="name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="proc_delete_one_emp">
+      <Parameter Name="name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="proc_employee_for_data_grid" ReturnType="Collection(companyDBModel.proc_employee_for_data_grid_Result)" />
+    <FunctionImport Name="proc_employeefor_data_grid" ReturnType="Collection(companyDBModel.proc_employeefor_data_grid_Result)" />
+    <FunctionImport Name="proc_employeefor_datagrid" ReturnType="Collection(companyDBModel.proc_employeefor_datagrid_Result)" />
+    <FunctionImport Name="proc_deleteemp">
+      <Parameter Name="id" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="getemployee_Result">
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="String" Name="employee" Nullable="false" MaxLength="150" />
+    <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+  </ComplexType>
+  <EntityType Name="projects">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="start_date" Type="DateTime" Precision="0" />
+    <Property Name="end_date" Type="DateTime" Precision="0" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="budget" Type="Decimal" Precision="6" Scale="2" />
+    <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tasks" Relationship="companyDBModel.FK_tasks_projects" FromRole="projects" ToRole="tasks" />
+  </EntityType>
+  <Association Name="FK_tasks_projects">
+    <End Type="companyDBModel.projects" Role="projects" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="companyDBModel.tasks" Role="tasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="projects">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="tasks">
+        <PropertyRef Name="proj_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="get_projects_Result">
+    <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="start_date" Nullable="true" />
+    <Property Type="DateTime" Name="end_date" Nullable="true" />
+    <Property Type="Decimal" Name="budget" Nullable="true" Precision="6" Scale="2" />
+    <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="proc_proj_Result">
+    <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="start_date" Nullable="true" />
+    <Property Type="DateTime" Name="end_date" Nullable="true" />
+    <Property Type="Decimal" Name="budget" Nullable="true" Precision="6" Scale="2" />
+    <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="proc_get_employee_for_data_grid_Result">
+    <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+    <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="birth_date" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="proc_employee_for_data_grid_Result">
+    <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+    <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="birth_date" Nullable="true" />
+    <Property Type="Int16" Name="num_of_child" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="proc_employeefor_data_grid_Result">
+    <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+    <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="birth_date" Nullable="true" />
+    <Property Type="Int16" Name="num_of_child" Nullable="true" />
+    <Property Type="String" Name="password" Nullable="true" MaxLength="15" />
+  </ComplexType>
+  <ComplexType Name="proc_employeefor_datagrid_Result">
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+    <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="birth_date" Nullable="true" />
+    <Property Type="Int16" Name="num_of_child" Nullable="true" />
+    <Property Type="String" Name="password" Nullable="true" MaxLength="15" />
+  </ComplexType>
+</Schema>

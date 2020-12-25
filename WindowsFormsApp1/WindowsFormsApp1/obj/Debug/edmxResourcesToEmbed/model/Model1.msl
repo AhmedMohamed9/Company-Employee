@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="companyDBModelStoreContainer" CdmEntityContainer="companyDBEntities">
+    <EntitySetMapping Name="Employee">
+      <EntityTypeMapping TypeName="companyDBModel.Employee">
+        <MappingFragment StoreEntitySet="Employee">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+          <ScalarProperty Name="num_of_child" ColumnName="num_of_child" />
+          <ScalarProperty Name="manger_id" ColumnName="manger_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tasks">
+      <EntityTypeMapping TypeName="companyDBModel.tasks">
+        <MappingFragment StoreEntitySet="tasks">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="start" ColumnName="start" />
+          <ScalarProperty Name="end" ColumnName="end" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="progress" ColumnName="progress" />
+          <ScalarProperty Name="proj_id" ColumnName="proj_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="employee_tasks" TypeName="companyDBModel.employee_tasks" StoreEntitySet="employee_tasks">
+      <EndProperty Name="Employee">
+        <ScalarProperty Name="id" ColumnName="emp" />
+      </EndProperty>
+      <EndProperty Name="tasks">
+        <ScalarProperty Name="id" ColumnName="task" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="getemployee" FunctionName="companyDBModel.Store.getemployee">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="companyDBModel.getemployee_Result">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="employee" ColumnName="employee" />
+          <ScalarProperty Name="manager" ColumnName="manager" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="projects">
+      <EntityTypeMapping TypeName="companyDBModel.projects">
+        <MappingFragment StoreEntitySet="projects">
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="budget" ColumnName="budget" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="end_date" ColumnName="end_date" />
+          <ScalarProperty Name="start_date" ColumnName="start_date" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="proc_delete_one_emp" FunctionName="companyDBModel.Store.proc_delete_one_emp" />
+    <FunctionImportMapping FunctionImportName="proc_employeefor_data_grid" FunctionName="companyDBModel.Store.proc_employeefor_data_grid">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="companyDBModel.proc_employeefor_data_grid_Result">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="manager" ColumnName="manager" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+          <ScalarProperty Name="num_of_child" ColumnName="num_of_child" />
+          <ScalarProperty Name="password" ColumnName="password" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="proc_employeefor_datagrid" FunctionName="companyDBModel.Store.proc_employeefor_datagrid">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="companyDBModel.proc_employeefor_datagrid_Result">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="manager" ColumnName="manager" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+          <ScalarProperty Name="num_of_child" ColumnName="num_of_child" />
+          <ScalarProperty Name="password" ColumnName="password" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="proc_deleteemp" FunctionName="companyDBModel.Store.proc_deleteemp" />
+  </EntityContainerMapping>
+</Mapping>

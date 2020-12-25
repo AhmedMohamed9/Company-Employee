@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="companyDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="title" Type="varchar" MaxLength="50" />
+          <Property Name="username" Type="varchar" MaxLength="20" />
+          <Property Name="password" Type="nvarchar" MaxLength="15" />
+          <Property Name="birth_date" Type="date" />
+          <Property Name="num_of_child" Type="smallint" />
+          <Property Name="manger_id" Type="int" />
+        </EntityType>
+        <EntityType Name="employee_tasks">
+          <Key>
+            <PropertyRef Name="emp" />
+            <PropertyRef Name="task" />
+          </Key>
+          <Property Name="emp" Type="int" Nullable="false" />
+          <Property Name="task" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="projects">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="start_date" Type="date" />
+          <Property Name="end_date" Type="date" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="budget" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="status" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="tasks">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="start" Type="date" />
+          <Property Name="end" Type="date" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="progress" Type="smallint" />
+          <Property Name="proj_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Employee_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="Employee1" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Employee1">
+              <PropertyRef Name="manger_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_employee_tasks_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="employee_tasks" Type="Self.employee_tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="employee_tasks">
+              <PropertyRef Name="emp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_employee_tasks_tasks">
+          <End Role="tasks" Type="Self.tasks" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="employee_tasks" Type="Self.employee_tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tasks">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="employee_tasks">
+              <PropertyRef Name="task" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tasks_projects">
+          <End Role="projects" Type="Self.projects" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tasks" Type="Self.tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="projects">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tasks">
+              <PropertyRef Name="proj_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="getemployee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="proc_delete_one_emp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="proc_deleteemp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="proc_employeefor_data_grid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="proc_employeefor_datagrid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="companyDBModelStoreContainer">
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="employee_tasks" EntityType="Self.employee_tasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="projects" EntityType="Self.projects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tasks" EntityType="Self.tasks" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Employee_Employee" Association="Self.FK_Employee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Employee1" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_employee_tasks_Employee" Association="Self.FK_employee_tasks_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="employee_tasks" EntitySet="employee_tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_employee_tasks_tasks" Association="Self.FK_employee_tasks_tasks">
+            <End Role="tasks" EntitySet="tasks" />
+            <End Role="employee_tasks" EntitySet="employee_tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tasks_projects" Association="Self.FK_tasks_projects">
+            <End Role="projects" EntitySet="projects" />
+            <End Role="tasks" EntitySet="tasks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="companyDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="birth_date" Type="DateTime" Precision="0" />
+          <Property Name="num_of_child" Type="Int16" />
+          <Property Name="manger_id" Type="Int32" />
+          <NavigationProperty Name="Employee1" Relationship="Self.FK_Employee_Employee" FromRole="Employee" ToRole="Employee1" />
+          <NavigationProperty Name="Employee2" Relationship="Self.FK_Employee_Employee" FromRole="Employee1" ToRole="Employee" />
+          <NavigationProperty Name="tasks" Relationship="Self.employee_tasks" FromRole="Employee" ToRole="tasks" />
+        </EntityType>
+        <EntityType Name="tasks">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="start" Type="DateTime" Precision="0" />
+          <Property Name="end" Type="DateTime" Precision="0" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="progress" Type="Int16" />
+          <Property Name="proj_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.employee_tasks" FromRole="tasks" ToRole="Employee" />
+          <NavigationProperty Name="projects" Relationship="companyDBModel.FK_tasks_projects" FromRole="tasks" ToRole="projects" />
+        </EntityType>
+        <Association Name="FK_Employee_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="Employee1" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Employee1">
+              <PropertyRef Name="manger_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="employee_tasks">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <End Role="tasks" Type="Self.tasks" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="companyDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employee" EntityType="Self.Employee" />
+          <EntitySet Name="tasks" EntityType="Self.tasks" />
+          <AssociationSet Name="FK_Employee_Employee" Association="Self.FK_Employee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Employee1" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="employee_tasks" Association="Self.employee_tasks">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="tasks" EntitySet="tasks" />
+          </AssociationSet>
+          <FunctionImport Name="getemployee" ReturnType="Collection(companyDBModel.getemployee_Result)" />
+          <EntitySet Name="projects" EntityType="companyDBModel.projects" />
+          <AssociationSet Name="FK_tasks_projects" Association="companyDBModel.FK_tasks_projects">
+            <End Role="projects" EntitySet="projects" />
+            <End Role="tasks" EntitySet="tasks" />
+          </AssociationSet>
+          <FunctionImport Name="get_projects" ReturnType="Collection(companyDBModel.get_projects_Result)" />
+          <FunctionImport Name="proc_proj" ReturnType="Collection(companyDBModel.proc_proj_Result)" />
+          <FunctionImport Name="proc_delete_proj">
+          <Parameter Name="name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="proc_get_employee_for_data_grid" ReturnType="Collection(companyDBModel.proc_get_employee_for_data_grid_Result)" />
+          <FunctionImport Name="proc_delete_employee">
+          <Parameter Name="name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="proc_delete_one_emp">
+          <Parameter Name="name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="proc_employee_for_data_grid" ReturnType="Collection(companyDBModel.proc_employee_for_data_grid_Result)" />
+          <FunctionImport Name="proc_employeefor_data_grid" ReturnType="Collection(companyDBModel.proc_employeefor_data_grid_Result)" />
+          <FunctionImport Name="proc_employeefor_datagrid" ReturnType="Collection(companyDBModel.proc_employeefor_datagrid_Result)" />
+          <FunctionImport Name="proc_deleteemp">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="getemployee_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="employee" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+        </ComplexType>
+        <EntityType Name="projects">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="start_date" Type="DateTime" Precision="0" />
+          <Property Name="end_date" Type="DateTime" Precision="0" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="budget" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tasks" Relationship="companyDBModel.FK_tasks_projects" FromRole="projects" ToRole="tasks" />
+        </EntityType>
+        <Association Name="FK_tasks_projects">
+          <End Type="companyDBModel.projects" Role="projects" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="companyDBModel.tasks" Role="tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="projects">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tasks">
+              <PropertyRef Name="proj_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="get_projects_Result">
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="start_date" Nullable="true" />
+          <Property Type="DateTime" Name="end_date" Nullable="true" />
+          <Property Type="Decimal" Name="budget" Nullable="true" Precision="6" Scale="2" />
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="proc_proj_Result">
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="start_date" Nullable="true" />
+          <Property Type="DateTime" Name="end_date" Nullable="true" />
+          <Property Type="Decimal" Name="budget" Nullable="true" Precision="6" Scale="2" />
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="proc_get_employee_for_data_grid_Result">
+          <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="birth_date" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="proc_employee_for_data_grid_Result">
+          <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="birth_date" Nullable="true" />
+          <Property Type="Int16" Name="num_of_child" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="proc_employeefor_data_grid_Result">
+          <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="birth_date" Nullable="true" />
+          <Property Type="Int16" Name="num_of_child" Nullable="true" />
+          <Property Type="String" Name="password" Nullable="true" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="proc_employeefor_datagrid_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="manager" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="username" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="birth_date" Nullable="true" />
+          <Property Type="Int16" Name="num_of_child" Nullable="true" />
+          <Property Type="String" Name="password" Nullable="true" MaxLength="15" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="companyDBModelStoreContainer" CdmEntityContainer="companyDBEntities">
+          <EntitySetMapping Name="Employee">
+            <EntityTypeMapping TypeName="companyDBModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="num_of_child" ColumnName="num_of_child" />
+                <ScalarProperty Name="manger_id" ColumnName="manger_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tasks">
+            <EntityTypeMapping TypeName="companyDBModel.tasks">
+              <MappingFragment StoreEntitySet="tasks">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="start" ColumnName="start" />
+                <ScalarProperty Name="end" ColumnName="end" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="progress" ColumnName="progress" />
+                <ScalarProperty Name="proj_id" ColumnName="proj_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="employee_tasks" TypeName="companyDBModel.employee_tasks" StoreEntitySet="employee_tasks">
+            <EndProperty Name="Employee">
+              <ScalarProperty Name="id" ColumnName="emp" />
+            </EndProperty>
+            <EndProperty Name="tasks">
+              <ScalarProperty Name="id" ColumnName="task" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="getemployee" FunctionName="companyDBModel.Store.getemployee">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="companyDBModel.getemployee_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="employee" ColumnName="employee" />
+                <ScalarProperty Name="manager" ColumnName="manager" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="projects">
+            <EntityTypeMapping TypeName="companyDBModel.projects">
+              <MappingFragment StoreEntitySet="projects">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="budget" ColumnName="budget" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="start_date" ColumnName="start_date" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="proc_delete_one_emp" FunctionName="companyDBModel.Store.proc_delete_one_emp" />
+          <FunctionImportMapping FunctionImportName="proc_employeefor_data_grid" FunctionName="companyDBModel.Store.proc_employeefor_data_grid">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="companyDBModel.proc_employeefor_data_grid_Result">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="manager" ColumnName="manager" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="num_of_child" ColumnName="num_of_child" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="proc_employeefor_datagrid" FunctionName="companyDBModel.Store.proc_employeefor_datagrid">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="companyDBModel.proc_employeefor_datagrid_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="manager" ColumnName="manager" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="num_of_child" ColumnName="num_of_child" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="proc_deleteemp" FunctionName="companyDBModel.Store.proc_deleteemp" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
